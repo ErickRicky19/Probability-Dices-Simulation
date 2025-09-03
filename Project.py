@@ -9,7 +9,8 @@ min_value = 1
 max_value = 6
 result1 = []
 result2 = []
-
+current_level = 0
+cant_turns = 1
 def update_min_max():
     global min_value, max_value
     try:
@@ -50,16 +51,30 @@ def show_report():
     canvas2 = FigureCanvasTkAgg(fig2, master=report_window)
     canvas2.draw()
     canvas2.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+
 def launch_dices():
+    global current_level
     canvas.delete("all")
     try:
-        value1 = random.randint(min_value, max_value)
-        value2 = random.randint(min_value, max_value)
-        result1.append(value1)
-        result2.append(value2)
-        draw_dice(canvas, 85, 200, 500, value1)
-        draw_dice(canvas, 800, 200, 500, value2)
+        for i in range (cant_turns):
+            value1 = random.randint(min_value, max_value)
+            value2 = random.randint(min_value, max_value)
+            result1.append(value1)
+            result2.append(value2)
+            if value1 == 2 or value1 == 4:
+               current_level += 1
+            elif value1 ==  1 or value1 == 3 or value1 == 5:
+                if current_level  > 0:
+                    current_level -= 1
+            if value2 == 2 or value2 == 4:
+                current_level += 1
+            elif value2 == 1 or value2 == 3 or value2 == 5:
+               if current_level > 0:
+                   current_level -= 1
 
+            label_level.configure(text=f"Level: {current_level}")
+            draw_dice(canvas, 55, 200, 500, value1)
+            draw_dice(canvas, 620, 200, 500, value2)
     except Exception as e:
         messagebox.showerror("Error", str(e))
 
@@ -89,19 +104,35 @@ def draw_dice(canvas, x, y, size, value):
     else:
         canvas.create_text(x + size // 2, y + size // 2, text=str(value), font=("Arial", 50, "bold"), fill="black")
 
+def clean_results():
+    global min_value, max_value
+
+    result1.clear()
+    result2.clear()
+    min_value = 1
+    max_value = 6
+    entry_max.delete(0, tk.END)
+    entry_min.delete(0, tk.END)
+
+def combobox_callback(choice):
+    global  cant_turns
+    cant_turns = int(choice)
+
+
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("blue")
 
 root = ctk.CTk()
-root.title("Binary Tree - Binary Tree Test")
+root.title("Probability Report Dices")
 root.geometry("1500x500")
+
 
 frame_controls = ctk.CTkFrame(root)
 frame_controls.pack(side=ctk.LEFT, padx=10, pady=10)
 
 frame_title = ctk.CTkFrame(frame_controls)
 frame_title.pack(pady=20)
-label_value = ctk.CTkLabel(frame_title, text="Binary Tree Test", font=("Arial", 50, "bold"), text_color="#FFF")
+label_value = ctk.CTkLabel(frame_title, text="Launching Dices And Reports", font=("Arial", 50, "bold"), text_color="#FFF")
 label_value.pack(side=ctk.TOP, padx=5, pady=10)
 
 frame_write = ctk.CTkFrame(frame_controls)
@@ -124,17 +155,37 @@ label_max.pack(side=ctk.LEFT, padx=5, pady=10)
 entry_max = ctk.CTkEntry(frame_max, font=("Arial", 14), width=380, )
 entry_max.insert(0, str(max_value))
 entry_max.pack(side=ctk.LEFT, padx=5, pady=10)
+frame_turns = ctk.CTkFrame(frame_controls)
+frame_turns.pack(pady=10)
 
+label_combobox = ctk.CTkLabel(frame_turns, text="Turns:", font=("Arial", 16, "bold"), text_color="#FFF")
+label_combobox.pack(side=ctk.LEFT, padx=5, pady=10)
+combobox = ctk.CTkComboBox(master=frame_turns,
+                                     values=["1","10", "100", "1000", "10000"],
+                                     command=combobox_callback)
+combobox.pack(padx=20, pady=10)
+combobox.set("1")
 frame_range = ctk.CTkFrame(frame_controls)
 frame_range.pack(pady=10)
 
+frame_level = ctk.CTkFrame(frame_controls)
+frame_level.pack(pady=10)
 
 button_update_range = ctk.CTkButton(frame_range, text="🔄 Update Values", command=update_min_max)
 button_update_range.grid(row=2, column=0, columnspan=2, pady=10, padx=10)
 button_roll_dice = ctk.CTkButton(frame_range, text="🎲 Launce Dices", command=launch_dices)
 button_roll_dice.grid(row=3, column=0, columnspan=2, pady=10, padx=10)
-button_show_reports = ctk.CTkButton(frame_range, text="Show Reports", command=show_report)
+button_show_reports = ctk.CTkButton(frame_range, text="📊 Show Reports", command=show_report)
 button_show_reports.grid(row=4, column=0, columnspan=2, pady=10, padx=10)
+
+frame_clear = ctk.CTkFrame(frame_controls)
+frame_clear.pack(pady=10)
+
+button_clear = ctk.CTkButton(frame_clear, text="🧹 Clear", command=clean_results)
+button_clear.grid(row=4, column=0, columnspan=2, pady=10, padx=10)
+
+label_level = ctk.CTkLabel(frame_level, text= "Level: " + str(current_level), font=("Arial", 16, "bold"), text_color="#FFF")
+label_level.pack(side=ctk.LEFT,  padx=5, pady=10)
 
 
 frame_canvas = ctk.CTkFrame(root, bg_color='white')
@@ -143,5 +194,5 @@ frame_canvas.pack(side=ctk.RIGHT, pady=1, padx=1)
 canvas = ctk.CTkCanvas(frame_canvas, width=1900, height=900, bg='#2D2D2D')
 canvas.pack(pady=1, padx=1)
 
-# Ejecutar aplicación
+
 root.mainloop()
