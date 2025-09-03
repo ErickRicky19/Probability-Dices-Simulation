@@ -15,8 +15,13 @@ pip install matplotlib
 ```
 pip install seaborn
 ```
-You have to have installed python3, if you use Linux:
+Or only 
 ```
-sudo dnf install python3-tkinter
+pip install customtkinter matplotlib seaborn
 ```
-
+## Resul
+Dices with 6 Faces
+<img width="1919" height="1079" alt="dices" src="https://github.com/user-attachments/assets/e5768ac6-0e89-401c-9ac2-e2af8e64b4f0" />
+Reports
+<img width="1919" height="1079" alt="reports" src="https://github.com/user-attachments/assets/e010628d-fc55-4ad5-88cc-17d574d16e00" />
+Also, you can launch dices n times from 1 to 10000 times.
