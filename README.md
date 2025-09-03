@@ -28,4 +28,4 @@ pip install customtkinter matplotlib seaborn
 
 <img width="1919" height="1079" alt="reports" src="https://github.com/user-attachments/assets/e010628d-fc55-4ad5-88cc-17d574d16e00" />
 
-## Also, you can launch dices n times from 1 to 10000 times.
+## Also, you can launch dices n times from 1 to 10000 times. In adition, change the number of dices faces to n faces
